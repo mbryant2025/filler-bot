@@ -5,7 +5,7 @@ use std::io::{self, Write};
 const ROWS: usize = 7;
 const COLS: usize = 8;
 const COLORS: &[char] = &['r', 'g', 'b', 'y', 'k'];
-const DEPTH: i32 = 4; //minimax depth
+const DEPTH: i32 = 8; //minimax depth
 
 type Grid = [[(char, Option<char>); COLS]; ROWS];
 
@@ -342,9 +342,6 @@ fn minimax(game: &mut Game, depth: i32, maximizing_player: bool) -> i64 {
 
 fn evaluate(game: &Game) -> i64 {
     let (player1_count, player2_count) = count_owned_cells(game);
-
-    println!("Player X: {}", player1_count);
-    println!("Player O: {}", player2_count);
 
     (player2_count as i64) - (player1_count as i64)
 }
