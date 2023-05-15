@@ -35,7 +35,6 @@ impl Clone for Game {
     }
 }
 
-
 impl Game {
     
     fn new(random: bool) -> Game {
@@ -101,24 +100,6 @@ impl Game {
         grid[ROWS - 1][0].1 = Some('O'); // Player 2 owns the bottom-left corner cell
         grid[0][COLS - 1].1 = Some('X'); // Player 1 owns the top-right corner cell
 
-        // // Flip horizontally
-        // let mut flipped_grid: Grid = [[('\0', None); COLS]; ROWS];
-        // for row in 0..ROWS {
-        //     for col in 0..COLS {
-        //         let mirrored_col = COLS - 1 - col;
-        //         flipped_grid[row][mirrored_col] = grid[row][col];
-        //     }
-        // }
-
-        // // Flip vertically
-        // let mut flipped_vertically_grid: Grid = [[('\0', None); COLS]; ROWS];
-        // for row in 0..ROWS {
-        //     let mirrored_row = ROWS - 1 - row;
-        //     for col in 0..COLS {
-        //         flipped_vertically_grid[mirrored_row][col] = flipped_grid[row][col];
-        //     }
-        // }
-
         Game {
             grid,
             player1: 'X',
@@ -126,7 +107,6 @@ impl Game {
             current_player: 'X',
         }
     }
-
 
     fn print_grid(&self) {
         let color_codes = &["\x1b[31m", "\x1b[32m", "\x1b[34m", "\x1b[33m", "\x1b[90m", "\x1b[35m"];
@@ -155,11 +135,7 @@ impl Game {
         
         println!("Player X: {}", player1_count);
         println!("Player O: {}", player2_count);
-    }
-    
-    
-    
-    
+    }    
     
     fn make_move(&mut self, color: char) {
         let mut owned_cells: Vec<(usize, usize)> = Vec::new();
