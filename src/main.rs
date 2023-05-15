@@ -4,7 +4,7 @@ use std::io::{self, Write};
 
 const ROWS: usize = 7;
 const COLS: usize = 8;
-const COLORS: &[char] = &['r', 'g', 'b', 'y', 'k'];
+const COLORS: &[char] = &['r', 'g', 'b', 'y', 'k', 'p'];
 const DEPTH: i32 = 8; //minimax depth
 
 type Grid = [[(char, Option<char>); COLS]; ROWS];
@@ -107,7 +107,7 @@ impl Game {
     }
 
     fn print_grid(&self) {
-        let color_codes = &["\x1b[31m", "\x1b[32m", "\x1b[34m", "\x1b[33m", "\x1b[90m"];
+        let color_codes = &["\x1b[31m", "\x1b[32m", "\x1b[34m", "\x1b[33m", "\x1b[90m", "\x1b[35m"];
     
         for row in &self.grid {
             for &(color, owner) in row {
@@ -236,11 +236,12 @@ fn main() {
     let mut game = Game::new(random);
 
     while !game.is_game_over() {
-        game.print_grid();
-        println!("It's player {}'s turn.", game.current_player);
 
         if game.current_player == 'X' {
             // Human player's turn
+            game.print_grid();
+            println!("It's player {}'s turn.", game.current_player);
+
             let mut input = String::new();
             print!("Choose a color: ");
             io::stdout().flush().unwrap();
@@ -258,6 +259,8 @@ fn main() {
             }
 
             game.make_move(color);
+
+            println!("Computer is thinking...")
         } else {
             // Computer player's turn
             let mut max_eval = std::i64::MIN;
