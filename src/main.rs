@@ -68,36 +68,57 @@ impl Game {
         let mut grid: Grid = [[('\0', None); COLS]; ROWS];
 
         println!("Working row-wise, enter {} colors for each row starting from the top row.", COLS);
-    
+
         for row in 0..ROWS {
-            for col in 0..COLS {
-                loop {
-                    let mut input = String::new();
-                    print!("Enter a color for cell [{}, {}]: ", row, col);
-                    io::stdout().flush().unwrap();
-                    io::stdin().read_line(&mut input).unwrap();
-                    let color = input.trim().chars().next();
-    
-                    match color {
-                        Some(c) => {
-                            if COLORS.contains(&c) {
-                                grid[row][col] = (c, None);
-                                break;
-                            } else {
-                                println!("Invalid color. Please try again.");
-                            }
-                        }
-                        None => {
-                            println!("No input detected. Please try again.");
-                        }
+            loop {
+                let mut input = String::new();
+                print!("Enter colors for row {}: ", row);
+                io::stdout().flush().unwrap();
+                io::stdin().read_line(&mut input).unwrap();
+                let colors: Vec<char> = input.trim().chars().take(COLS).collect();
+
+                if colors.len() != COLS {
+                    println!("Invalid row length. Please enter exactly {} colors.", COLS);
+                    continue;
+                }
+
+                let mut valid_row = true;
+                for (col, color) in colors.iter().enumerate() {
+                    if !COLORS.contains(color) {
+                        valid_row = false;
+                        println!("Invalid color at cell [{}, {}]. Please try again.", row, col);
+                        break;
                     }
+                    grid[row][col] = (*color, None);
+                }
+
+                if valid_row {
+                    break;
                 }
             }
         }
-    
-        grid[ROWS - 1][0].1 = Some('X'); // Player 1 owns the bottom-left corner cell
-        grid[0][COLS - 1].1 = Some('O'); // Player 2 owns the top-right corner cell
-    
+
+        grid[ROWS - 1][0].1 = Some('O'); // Player 2 owns the bottom-left corner cell
+        grid[0][COLS - 1].1 = Some('X'); // Player 1 owns the top-right corner cell
+
+        // // Flip horizontally
+        // let mut flipped_grid: Grid = [[('\0', None); COLS]; ROWS];
+        // for row in 0..ROWS {
+        //     for col in 0..COLS {
+        //         let mirrored_col = COLS - 1 - col;
+        //         flipped_grid[row][mirrored_col] = grid[row][col];
+        //     }
+        // }
+
+        // // Flip vertically
+        // let mut flipped_vertically_grid: Grid = [[('\0', None); COLS]; ROWS];
+        // for row in 0..ROWS {
+        //     let mirrored_row = ROWS - 1 - row;
+        //     for col in 0..COLS {
+        //         flipped_vertically_grid[mirrored_row][col] = flipped_grid[row][col];
+        //     }
+        // }
+
         Game {
             grid,
             player1: 'X',
@@ -105,6 +126,7 @@ impl Game {
             current_player: 'X',
         }
     }
+
 
     fn print_grid(&self) {
         let color_codes = &["\x1b[31m", "\x1b[32m", "\x1b[34m", "\x1b[33m", "\x1b[90m", "\x1b[35m"];
